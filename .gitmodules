@@ -7,3 +7,12 @@
 [submodule "5.6.2/common"]
 	path = 5.6.2/common
 	url = https://github.com/tehplayground/common.git
+[submodule "5.6.4/common"]
+	path = 5.6.4/common
+	url = https://github.com/tehplayground/common.git
+[submodule "5.5.20/common"]
+	path = 5.5.20/common
+	url = https://github.com/tehplayground/common.git
+[submodule "5.4.36/common"]
+	path = 5.4.36/common
+	url = https://github.com/tehplayground/common.git
