@@ -10,3 +10,15 @@
 [submodule "7.0.10/common"]
 	path = 7.0.10/common
 	url = git@github.com:tehplayground/common.git
+[submodule "5.6.25/common"]
+	path = 5.6.25/common
+	url = git@github.com:tehplayground/common.git
+[submodule "7.0.11/common"]
+	path = 7.0.11/common
+	url = git@github.com:tehplayground/common.git
+[submodule "5.6.26/common"]
+	path = 5.6.26/common
+	url = git@github.com:tehplayground/common.git
+[submodule "5.5.38/common"]
+	path = 5.5.38/common
+	url = git@github.com:tehplayground/common.git
