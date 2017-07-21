@@ -22,3 +22,12 @@
 [submodule "5.5.38/common"]
 	path = 5.5.38/common
 	url = git@github.com:tehplayground/common.git
+[submodule "7.0.21/common"]
+	path = 7.0.21/common
+	url = git@github.com:tehplayground/common.git
+[submodule "7.1.7/common"]
+	path = 7.1.7/common
+	url = git@github.com:tehplayground/common.git
+[submodule "7.2.0beta1/common"]
+	path = 7.2.0beta1/common
+	url = git@github.com:tehplayground/common.git
