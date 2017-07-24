@@ -31,3 +31,6 @@
 [submodule "7.2.0beta1/common"]
 	path = 7.2.0beta1/common
 	url = git@github.com:tehplayground/common.git
+[submodule "5.6.31/common"]
+	path = 5.6.31/common
+	url = git@github.com:tehplayground/common.git

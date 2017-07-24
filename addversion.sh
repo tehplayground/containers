@@ -16,14 +16,32 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 	exit -1
 fi
 
+if [ -f ".lock" ]; then
+	echo
+	echo "Already building elsewhere, exiting"
+	echo "If this is not the case, something went wrong in a previous build. Remove .lock file and try again"
+	exit -1
+fi
+
+touch .lock
 echo
+echo
+echo >build.log # nuke the log
+echo "Okay! Let's go! You can watch the debug progress with: \$ tail -f build.log"
 echo "Creating $1 folder ..."
-echo
+
+MAINVER=${1%.*}
+if [ ! -f ".ext-$MAINVER" ]; then
+	BUILDCONF=$(cat .ext-default)
+else
+	BUILDCONF=$(cat .ext-$MAINVER)
+fi
 
 mkdir $1
 cd $1
 cat > Dockerfile <<EOF
 FROM php:$1
+$BUILDCONF
 RUN ln -s /usr/local/bin/php /php
 
 ADD common/run.sh /run.sh
@@ -34,17 +52,15 @@ WORKDIR /render
 ENTRYPOINT ["/run.sh"]
 EOF
 
-git submodule add --force git@github.com:tehplayground/common.git common
+git submodule add --force git@github.com:tehplayground/common.git common >>build.log 2>&1
 cd ..
 
-echo
 echo "Building tehplayground/$1 ..."
-echo
-sudo docker $DOCKER_HOST build -t tehplayground/$1 $1
+echo "This will take a LONG time, go grab a cuppa ..."
+sudo docker $DOCKER_HOST build -t tehplayground/$1 $1 >>build.log 2>&1
 
-echo
+echo "Build completed successfully!"
 echo "Testing tehplayground/$1 container ..."
-echo
 
 NEWVER=$(echo "<?php echo phpversion();" | sudo docker $DOCKER_HOST run -i tehplayground/$1)
 if [ "$1" != "$NEWVER" ]; then
@@ -52,22 +68,24 @@ if [ "$1" != "$NEWVER" ]; then
 	exit -1
 fi
 
-echo
-echo "Done!"
+echo "Container returned version number $NEWVER, which matches requested $1"
+echo "Yay!"
 
 PUSHCMD="sudo docker $DOCKER_HOST push tehplayground/$1"
 read -p "Would you like to push this to Docker Hub? (y/n) " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+	echo
 	echo "Okay, feel free to push to Docker Hub when you're ready with the following command:"
 	echo "\$ ${PUSHCMD}"
 	exit
 fi
 
 echo
-echo "Pushing now ..."
+echo "Pushing now"
+echo "Depending on your internet speed, this could take a really long time, go grab another cuppa ... "
+
+$PUSHCMD >>build.log 2>&1
+
 echo
-
-$PUSHCMD
-
-echo 
 echo "All done! Don't forget to push these changes into git!"
+rm -f .lock
