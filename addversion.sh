@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 set -e
 
 if [ "$1" = "" ]; then
@@ -37,8 +38,8 @@ else
 	BUILDCONF=$(cat .ext-$MAINVER)
 fi
 
-mkdir $1
-cd $1
+mkdir -p $1
+pushd $1
 cat > Dockerfile <<EOF
 FROM php:$1
 $BUILDCONF
@@ -52,7 +53,10 @@ WORKDIR /render
 ENTRYPOINT ["/run.sh"]
 EOF
 
-git submodule add --force git@github.com:tehplayground/common.git common >>build.log 2>&1
+! git submodule status common
+if [ $? -eq 0 ]; then
+	git submodule add --force git@github.com:tehplayground/common.git common >>build.log 2>&1
+fi
 cd ..
 
 echo "Building tehplayground/$1 ..."
