@@ -49,3 +49,12 @@
 [submodule "5.6.32/common"]
 	path = 5.6.32/common
 	url = git@github.com:tehplayground/common.git
+[submodule "7.4.16/common"]
+	path = 7.4.16/common
+	url = git@github.com:tehplayground/common.git
+[submodule "8.0.3/common"]
+	path = 8.0.3/common
+	url = git@github.com:tehplayground/common.git
+[submodule "7.3.27/common"]
+	path = 7.3.27/common
+	url = git@github.com:tehplayground/common.git
