@@ -1,15 +1,8 @@
-#!/bin/bash
-set -x
-set -e
+#!/bin/bash -e
 
 if [ "$1" = "" ]; then
 	echo "usage: $0 <php version> [docker host:port]"
 	exit -1
-fi
-
-DOCKER_HOST=""
-if [ "$2" != "" ]; then
-	DOCKER_HOST="-H $2"
 fi
 
 read -p "Will attempt to build new container from PHP version $1, is this correct? (y/n) " -n 1 -r
@@ -41,7 +34,7 @@ fi
 mkdir -p $1
 pushd $1
 cat > Dockerfile <<EOF
-FROM php:$1
+FROM php:${2:-1}
 $BUILDCONF
 RUN ln -s /usr/local/bin/php /php
 
@@ -61,12 +54,12 @@ cd ..
 
 echo "Building tehplayground/$1 ..."
 echo "This will take a LONG time, go grab a cuppa ..."
-sudo docker $DOCKER_HOST build -t tehplayground/$1 $1 >>build.log 2>&1
+docker $DOCKER_HOST build -t tehplayground/$1 $1 >>build.log 2>&1
 
 echo "Build completed successfully!"
 echo "Testing tehplayground/$1 container ..."
 
-NEWVER=$(echo "<?php echo phpversion();" | sudo docker $DOCKER_HOST run -i tehplayground/$1)
+NEWVER=$(echo "<?php echo phpversion();" | docker $DOCKER_HOST run -i tehplayground/$1)
 if [ "$1" != "$NEWVER" ]; then
 	echo "New container returned \"${NEWVER}\" when queried via phpversion() - please verify!"
 	exit -1
@@ -75,7 +68,7 @@ fi
 echo "Container returned version number $NEWVER, which matches requested $1"
 echo "Yay!"
 
-PUSHCMD="sudo docker $DOCKER_HOST push tehplayground/$1"
+PUSHCMD="docker $DOCKER_HOST push tehplayground/$1"
 read -p "Would you like to push this to Docker Hub? (y/n) " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
 	echo
