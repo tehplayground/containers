@@ -34,7 +34,7 @@ fi
 mkdir -p $1
 pushd $1
 cat > Dockerfile <<EOF
-FROM php:${2:-1}
+FROM php:$1
 $BUILDCONF
 RUN ln -s /usr/local/bin/php /php
 
@@ -46,15 +46,16 @@ WORKDIR /render
 ENTRYPOINT ["/run.sh"]
 EOF
 
-! git submodule status common
-if [ $? -eq 0 ]; then
+#! git submodule status common
+#if [ $? -eq 0 ]; then
 	git submodule add --force git@github.com:tehplayground/common.git common >>build.log 2>&1
-fi
+#fi
 cd ..
 
+DOCKER_HOST=
 echo "Building tehplayground/$1 ..."
 echo "This will take a LONG time, go grab a cuppa ..."
-docker $DOCKER_HOST build -t tehplayground/$1 $1 >>build.log 2>&1
+docker $DOCKER_HOST build -t tehplayground/$1 $1 | tee -a build.log
 
 echo "Build completed successfully!"
 echo "Testing tehplayground/$1 container ..."
@@ -81,7 +82,7 @@ echo
 echo "Pushing now"
 echo "Depending on your internet speed, this could take a really long time, go grab another cuppa ... "
 
-$PUSHCMD >>build.log 2>&1
+$PUSHCMD | tee -a build.log
 
 echo
 echo "All done! Don't forget to push these changes into git!"
