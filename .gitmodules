@@ -85,3 +85,12 @@
 [submodule "8.0.25/common"]
 	path = 8.0.25/common
 	url = git@github.com:tehplayground/common.git
+[submodule "8.3.0/common"]
+	path = 8.3.0/common
+	url = git@github.com:tehplayground/common.git
+[submodule "8.2.13/common"]
+	path = 8.2.13/common
+	url = git@github.com:tehplayground/common.git
+[submodule "8.1.26/common"]
+	path = 8.1.26/common
+	url = git@github.com:tehplayground/common.git
